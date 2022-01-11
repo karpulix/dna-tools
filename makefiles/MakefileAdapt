@@ -1,0 +1,40 @@
+##MAKEFLAGS += -rR
+fastqGZ = $(shell ls /data/*_R?.fastq.gz)
+fastq = $(subst .fastq.gz,.fastq)
+SAMPLES = $(subst _R1_001.fastq.gz,,$(shell ls /data/*_R1_001.fastq.gz))
+NAMES = $(subst /data/,,$(SAMPLES))
+NoAdap = $(addsuffix _R1.NoAdap.fastq.gz,$(SAMPLES))
+NoAdap1 = $(addsuffix _R1.NoAdap1.fastq.gz,$(SAMPLES))
+log =  $(addprefix log/,$(NAMES))
+SHELL=/bin/bash
+
+stat_SAMPLES = $(subst /data/,/stat/,$(SAMPLES))
+MAKEFLAGS += -j48
+
+.SECONDARY : $(NoAdap) $(Merged) $(Filt) $(Long) $(Align) $(Good)
+
+#a:  /data/denoised.fa
+
+all : $(NoAdap) 
+# $(NoAdap1)
+
+/data/%_R1.NoAdap.fastq.gz:  /data/%_R1_001.fastq.gz
+	@echo $@
+	cutadapt -j 0 \
+	-a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
+	-a GATCGGAAGAGCACACGTCTGAACTCCA \
+	-a ATCTCGTATGCCGTCTTCTGCTTG \
+	-A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT  \
+	-A AGATCGGAAGAGCGTCGTGTAGGGAAAGA  \
+					 -A AGATCTCGGTGGTCGCCGTATCATT \
+					 -A AGATCTCGGTGGTCGCCGTAT \
+	-g GCCGGAGCTCTGCAGATAT -G GCCGGAGCTCTGCAGATAT \
+	-a ATATCTGCAGAGCTCCGGC -A ATATCTGCAGAGCTCCGGC \
+	 -e 0.2 -m 30 -n 10 -O 15  \
+	 -o $@ -p $(@:_R1.NoAdap.fastq.gz=_R2.NoAdap.fastq.gz) $< $(<:_R1_001.fastq.gz=_R2_001.fastq.gz)
+
+
+/data/%_R1.NoAdap1.fastq.gz: /data/%_R1.NoAdap.fastq.gz
+	@echo $@
+	cutadapt -U 32 -U -32 -u 32 -u -32 -m 20 -o $@ -p $(@:_R1.NoAdap1.fastq.gz=_R2.NoAdap1.fastq.gz) $< $(<:R1.NoAdap.fastq.gz=R2.NoAdap.fastq.gz)
+

@@ -1,0 +1,2 @@
+#!bin/bash
+mira --cwd=/mira-workdir /manifest.conf 
