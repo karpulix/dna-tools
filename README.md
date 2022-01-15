@@ -39,3 +39,16 @@ docker run -v /full/path/to/myfolder/Flu_data:/data --rm karpulix/mira-assembler
 ```
 
 
+
+
+## Запускаем Мира
+
+Предположим, что файлы типа этого flu_1_S26_L001_R1_001.fastq.gz лежат в папке ~/myfolder/Flu_data/
+
+Чтобы убрать адаптеры, запустим:
+```
+docker run -v /full/path/to/myfolder/Flu_data:/data -v /mira-workdir:/mira-workdir --rm karpulix/mira-assembler mira-assembler-run
+```
+
+
+
