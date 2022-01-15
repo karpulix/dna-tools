@@ -35,7 +35,7 @@ docker run --rm karpulix/mira-assembler cutadapt --version
 
 Чтобы убрать адаптеры, запустим:
 ```
-docker run --rm karpulix/mira-assembler adapt-run -v /full/path/to/myfolder/Flu_data/:/data
+docker run -v /full/path/to/myfolder/Flu_data:/data --rm karpulix/mira-assembler adapt-run 
 ```
 
 
