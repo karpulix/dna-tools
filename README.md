@@ -21,10 +21,21 @@ chmod +x ./build.sh
 3. Теперь можно запускать , проверим что утилиты в контейнере запускаются
 
 ```
-docker run karpulix/mira-assembler mira -v
+docker run --rm karpulix/mira-assembler mira -v
 ```
 ```
-docker run karpulix/mira-assembler cutadapt --version
+docker run --rm karpulix/mira-assembler cutadapt --version
 ````
+
+4. Этапы - специфическая процедура, специально для Анны
+
+4.1 Удаляем адапты
+
+Предположим, что файлы типа этого flu_1_S26_L001_R1_001.fastq.gz лежат в папке ~/myfolder/Flu_data/
+
+Чтобы убрать адаптеры, запустим:
+```
+docker run --rm karpulix/mira-assembler adapt-run -v /full/path/to/myfolder/Flu_data/:/data
+```
 
 
